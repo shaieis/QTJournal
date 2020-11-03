@@ -12,11 +12,15 @@ SOURCES += \
     handstroke.cpp \
     main.cpp \
     mainwindow.cpp \
+    page.cpp \
+    pagegrid.cpp \
     stroke.cpp
 
 HEADERS += \
     handstroke.h \
     mainwindow.h \
+    page.h \
+    pagegrid.h \
     stroke.h
 
 # Default rules for deployment.
