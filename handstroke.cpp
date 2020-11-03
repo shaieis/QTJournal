@@ -34,3 +34,7 @@ void HandStroke::draw(QPainter& painter, qreal zoom)
     }
 }
 
+void HandStroke::appendPoint(const QPoint& point)
+{
+    m_points.append(point);
+}
