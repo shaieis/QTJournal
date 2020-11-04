@@ -1,5 +1,18 @@
 #include "pagegrid.h"
 
+PageGrid::PageGrid() :
+    m_enabled(false),
+    m_vGridSpacing(0),
+    m_vStokeWidth(0),
+    m_vColor(),
+    m_hGridSpacing(0),
+    m_hStokeWidth(0),
+    m_hColor(),
+    m_rulerXPos(0),
+    m_rulerStokeWidth(0),
+    m_rulerColor()
+{}
+
 
 PageGrid::PageGrid(
         bool enabled,
@@ -54,11 +67,12 @@ PageGrid& PageGrid::operator=(const PageGrid& other)
     return *this;
 }
 
-void PageGrid::paint(QPainter &painter, qreal zoom, qreal pageWidth, qreal pageHeight)
+void PageGrid::draw(QPainter& painter,const QSize& pageDimensions, const qreal& zoom)
 {
     if (!m_enabled) return;
-    int numOfVGridStrokes = pageWidth / m_vGridSpacing;
-    int numOfHGridStrokes = pageHeight / m_hGridSpacing;
+
+    int numOfVGridStrokes = pageDimensions.width() / m_vGridSpacing;
+    int numOfHGridStrokes = pageDimensions.height() / m_hGridSpacing;
 
     QPen pen;
 
@@ -66,11 +80,11 @@ void PageGrid::paint(QPainter &painter, qreal zoom, qreal pageWidth, qreal pageH
     pen.setCapStyle(Qt::FlatCap);
 
     pen.setWidthF(m_vStokeWidth * zoom);
-    //pen.setWidthF(0.5 * devicePixelRatioF());
+
     painter.setPen(pen);
     for (int i = 0; i < numOfVGridStrokes; i++)
     {
-      painter.drawLine(QLineF(static_cast<qreal>(i+1)*m_vGridSpacing*zoom, 0,  static_cast<qreal>(i+1)*m_vGridSpacing*zoom, static_cast<qreal>(pageHeight)*zoom));
+      painter.drawLine(QLineF((i+1)*m_vGridSpacing*zoom, 0, (i+1)*m_vGridSpacing*zoom, pageDimensions.height()*zoom));
     }
 
     pen.setColor(m_hColor);
@@ -79,14 +93,14 @@ void PageGrid::paint(QPainter &painter, qreal zoom, qreal pageWidth, qreal pageH
 
     for (int i = 0; i < numOfHGridStrokes; i++)
     {
-      painter.drawLine(QLineF(0, static_cast<qreal>(i+1)*m_hGridSpacing*zoom, static_cast<qreal>(pageWidth)*zoom, static_cast<qreal>(i+1)*m_hGridSpacing*zoom));
+      painter.drawLine(QLineF(0, (i+1)*m_hGridSpacing*zoom, pageDimensions.width()*zoom, (i+1)*m_hGridSpacing*zoom));
     }
 
     pen.setColor(m_rulerColor);
     pen.setWidthF(m_rulerStokeWidth * zoom);
     painter.setPen(pen);
 
-    painter.drawLine(QLineF(static_cast<qreal>(m_rulerXPos)*zoom, 0,  static_cast<qreal>(m_rulerXPos)*zoom, static_cast<qreal>(pageHeight)*zoom));
+    painter.drawLine(QLineF(m_rulerXPos*zoom, 0,  m_rulerXPos*zoom, pageDimensions.height()*zoom));
 }
 
 bool PageGrid::enabled() const

@@ -7,6 +7,8 @@
 class PageGrid
 {
 public:
+    PageGrid();
+
     PageGrid(bool enabled, const qreal& vGridSpacing, const qreal& vStokeWidth, const QColor& vColor, const qreal& hGridSpacing,
              const qreal& hStokeWidth, const QColor& hColor, const qreal& rulerXPos, const qreal& rulerStokeWidth, const QColor& rulerColor);
 
@@ -14,7 +16,7 @@ public:
 
     PageGrid& operator=(const PageGrid& other);
 
-    void paint(QPainter &painter, qreal zoom, qreal pageWidthMm, qreal pageHeightMm);
+    void draw(QPainter& painter,const QSize& pageDimensions, const qreal& zoom);
 
     bool enabled() const;
     void setEnabled(bool enabled);
