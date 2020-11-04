@@ -2,7 +2,8 @@
 
 Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200))
 {
-    resize(m_dimension);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setMinimumSize(m_dimension);
     setBackground("white");
 }
 
@@ -12,7 +13,8 @@ Page::Page(QWidget *parent, const QSize& dimension, const QColor& bg, PageGrid& 
     m_bg(bg),
     m_grid(grid)
 {
-    resize(m_dimension);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setMinimumSize(m_dimension);
     setBackground(bg);
 }
 
