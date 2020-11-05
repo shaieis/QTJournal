@@ -35,9 +35,14 @@ MainWindow::MainWindow(QWidget *parent)
 //layout->setAlignment(Qt::AlignTop);
 //layout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
+QColor bg("yellow");
+PageGrid grid(true,1,1,"blue",1,1,"black",10,1,"red");
+QSize dim(300,300);
+Document* d = new Document(this,dim,bg,grid,2);
 
-Document* d = new Document(this);
 setCentralWidget(d);
+
+
 d->addNewPage();
 d->addNewPage();
 d->addNewPage();

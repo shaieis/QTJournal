@@ -13,14 +13,14 @@ class Page : public QWidget
 
 public:
     Page(QWidget *parent = nullptr);
-    Page(QWidget *parent, const QSize& dimension, const QColor& bg, PageGrid& grid);
+    Page(QWidget *parent, const QSize& dimension, const QColor& bg, PageGrid& grid, const qreal& zoom);
 
     void setBackground(const QColor& color);
 private:
     QSize m_dimension;
     QColor m_bg;
-
     PageGrid m_grid;
+    qreal m_zoom;
     QVector<Stroke*> strokes;
 
 };

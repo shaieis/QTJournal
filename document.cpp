@@ -1,19 +1,31 @@
 #include "document.h"
-
-Document::Document(QWidget *parent) :QWidget(parent)
+#include <QDebug>
+#include <QResizeEvent>
+Document::Document(QWidget *parent, const QSize& pageDimension, const QColor& pageBgColor, const PageGrid& pageGrid,const qreal& pageZoom) :
+    QWidget(parent),
+    m_pageDimension(pageDimension),
+    m_pageBgColor(pageBgColor),
+    m_pageGrid(pageGrid),
+    m_pageZoom(pageZoom)
 {
     initScrollArea();
-
 }
 
 void Document::addNewPage()
 {
-    Page *p = new Page;
-    m_pages.append(new Page());
+    Page *p = new Page(this, m_pageDimension, m_pageBgColor, m_pageGrid, m_pageZoom);
+
+    m_pages.append(p);
     m_layout->addWidget(p);
+
 }
 
+void Document::resizeEvent(QResizeEvent * event)
+{
 
+    m_scrollArea->setGeometry(0,0,event->size().width(), event->size().height());
+    return QWidget::resizeEvent(event);
+}
 void Document::initScrollArea()
 {
     //Init QScrollArea

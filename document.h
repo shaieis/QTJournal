@@ -5,14 +5,16 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 
+
 #include "page.h"
 
 class Document : public QWidget
 {
     Q_OBJECT
 public:
-    Document(QWidget *parent = nullptr);
+    Document(QWidget *parent, const QSize& pageDimension, const QColor& pageBgColor, const PageGrid& pageGrid, const qreal& pageZoom);
     void addNewPage();
+    void resizeEvent(QResizeEvent * event) override;
 
 private:
     QVector<Page*> m_pages;
@@ -21,7 +23,11 @@ private:
     QWidget* m_layoutWrapper;
     QScrollArea* m_scrollArea;
 
+    QSize m_pageDimension;
+    QColor m_pageBgColor;
+    PageGrid m_pageGrid;
 
+    qreal m_pageZoom;
     void initScrollArea();
 
 };

@@ -1,20 +1,22 @@
 #include "page.h"
 
-Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200))
+Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200)), m_zoom(1)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    setMinimumSize(m_dimension);
+    setMinimumSize(m_dimension*m_zoom);
     setBackground("white");
+
 }
 
-Page::Page(QWidget *parent, const QSize& dimension, const QColor& bg, PageGrid& grid) :
+Page::Page(QWidget *parent, const QSize& dimension, const QColor& bg, PageGrid& grid, const qreal& zoom) :
     QWidget(parent),
     m_dimension(dimension),
     m_bg(bg),
-    m_grid(grid)
+    m_grid(grid),
+    m_zoom(zoom)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    setMinimumSize(m_dimension);
+    setMinimumSize(m_dimension*m_zoom);
     setBackground(bg);
 }
 
