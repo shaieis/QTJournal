@@ -16,6 +16,8 @@ public:
     Page(QWidget *parent, const QSize& dimension, const QColor& bg, PageGrid& grid, const qreal& zoom);
 
     void setBackground(const QColor& color);
+    void paintEvent(QPaintEvent *) override;
+
 private:
     QSize m_dimension;
     QColor m_bg;

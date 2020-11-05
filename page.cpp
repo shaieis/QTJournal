@@ -1,4 +1,5 @@
 #include "page.h"
+#include <QDebug>
 
 Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200)), m_zoom(1)
 {
@@ -30,3 +31,10 @@ void Page::setBackground(const QColor& color)
     setPalette(pal);
 }
 
+void Page::paintEvent(QPaintEvent * e)
+{
+    QPainter p(this);
+    m_grid.draw(p, m_dimension, m_zoom);
+    qDebug() << "Paint Event " << e;
+    return QWidget::paintEvent(e);
+}
