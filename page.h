@@ -17,6 +17,8 @@ public:
 
     void setBackground(const QColor& color);
     void paintEvent(QPaintEvent *) override;
+    void setZoom(const qreal& newZoom);
+    void setDimension(const QSize& newDimension);
 
 private:
     QSize m_dimension;

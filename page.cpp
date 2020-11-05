@@ -34,7 +34,23 @@ void Page::setBackground(const QColor& color)
 void Page::paintEvent(QPaintEvent * e)
 {
     QPainter p(this);
+    p.setRenderHint(QPainter::Antialiasing);
     m_grid.draw(p, m_dimension, m_zoom);
+
+
     qDebug() << "Paint Event " << e;
     return QWidget::paintEvent(e);
 }
+
+void Page::setZoom(const qreal& newZoom)
+{
+
+    m_zoom = newZoom;
+    setMinimumSize(m_dimension*m_zoom);
+
+}
+
+ void Page::setDimension(const QSize& newDimension)
+ {
+     m_dimension = newDimension;
+ }

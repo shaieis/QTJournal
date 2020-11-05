@@ -15,6 +15,8 @@ public:
     Document(QWidget *parent, const QSize& pageDimension, const QColor& pageBgColor, const PageGrid& pageGrid, const qreal& pageZoom);
     void addNewPage();
     void resizeEvent(QResizeEvent * event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void setPageZoom(const qreal& newZoom);
 
 private:
     QVector<Page*> m_pages;

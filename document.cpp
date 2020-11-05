@@ -44,3 +44,26 @@ void Document::initScrollArea()
     //Insert layout in scrollArea
     m_scrollArea->setWidget(m_layoutWrapper);
 }
+
+void Document::keyPressEvent(QKeyEvent *event)
+{
+    qDebug() << "key pressed" << event->key();
+    if (event->key() == Qt::Key::Key_X)
+    {
+        setPageZoom(m_pageZoom *2);
+    }
+    if (event->key() == Qt::Key::Key_Y)
+    {
+        setPageZoom(m_pageZoom /2);
+    }
+}
+
+void Document::setPageZoom(const qreal& newZoom)
+{
+    m_pageZoom = newZoom;
+    for (auto page : m_pages)
+    {
+        page->setZoom(m_pageZoom);
+    }
+
+}

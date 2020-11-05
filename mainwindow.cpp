@@ -35,9 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
 //layout->setAlignment(Qt::AlignTop);
 //layout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
-QColor bg("yellow");
-PageGrid grid(true,25,1,"blue",25,1,"orange",250,1,"red");
-QSize dim(300,300);
+QColor bg("white");
+PageGrid grid(true,50,0.1,"blue",50,0.1,"blue",250,1,"red");
+QSize dim(2100,2700);
 Document* d = new Document(this,dim,bg,grid,3);
 
 setCentralWidget(d);
