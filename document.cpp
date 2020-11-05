@@ -1,12 +1,14 @@
 #include "document.h"
 #include <QDebug>
 #include <QResizeEvent>
-Document::Document(QWidget *parent, const QSize& pageDimension, const QColor& pageBgColor, const PageGrid& pageGrid,const qreal& pageZoom) :
+#include <QScrollBar>
+Document::Document(QWidget *parent, const QSize& pageDimension, const QColor& pageBgColor, const PageGrid& pageGrid,const qreal& pageZoom, bool pageFitsWidth) :
     QScrollArea(parent),
     m_pageDimension(pageDimension),
     m_pageBgColor(pageBgColor),
     m_pageGrid(pageGrid),
-    m_pageZoom(pageZoom)
+    m_pageZoom(pageZoom),
+    m_pageFitsWidth(pageFitsWidth)
 {
     //Init QScrollArea
 
@@ -23,6 +25,7 @@ Document::Document(QWidget *parent, const QSize& pageDimension, const QColor& pa
 
     //Insert layout in scrollArea
     setWidget(m_layoutWrapper);
+
 }
 
 void Document::addNewPage()
@@ -34,12 +37,27 @@ void Document::addNewPage()
 
 }
 
-//void Document::resizeEvent(QResizeEvent * event)
-//{
+void Document::resizeEvent(QResizeEvent * event)
+{
+    if (m_pageFitsWidth) zoomToWidth(event->size().width());
 
-//    return QScrollArea::resizeEvent(event);
-//}
+    return QScrollArea::resizeEvent(event);
+}
 
+void Document::zoomToWidth(int width, bool resizeToFitScrollBar)
+{
+    // if width == 0, set to fit width of widget
+
+    if (width == 0) width = this->width();
+    if (resizeToFitScrollBar) width -= verticalScrollBar()->width() + 1;
+
+
+    int pageWidth = m_pageDimension.width();
+    qDebug() <<  this->width() << " " << verticalScrollBar()->width();
+
+     qreal zoom = (qreal)width / pageWidth;
+     setPageZoom(zoom);
+}
 
 void Document::keyPressEvent(QKeyEvent *event)
 {

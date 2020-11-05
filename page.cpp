@@ -4,7 +4,8 @@
 Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200)), m_zoom(1)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    setMinimumSize(m_dimension*m_zoom);
+
+    setFixedSize(m_dimension*m_zoom);
     setBackground("white");
 
 }
@@ -17,7 +18,9 @@ Page::Page(QWidget *parent, const QSize& dimension, const QColor& bg, PageGrid& 
     m_zoom(zoom)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    setMinimumSize(m_dimension*m_zoom);
+
+    setFixedSize(m_dimension*m_zoom);
+    qDebug() << "page size:" << m_dimension*m_zoom;
     setBackground(bg);
 }
 
@@ -46,8 +49,9 @@ void Page::setZoom(const qreal& newZoom)
 {
 
     m_zoom = newZoom;
-    setMinimumSize(m_dimension*m_zoom);
-
+    //setMinimumSize(m_dimension*m_zoom);
+    qDebug() << "page dims: " << m_dimension*m_zoom;
+    setFixedSize(m_dimension*m_zoom);
 }
 
  void Page::setDimension(const QSize& newDimension)
