@@ -2,13 +2,27 @@
 #include <QDebug>
 #include <QResizeEvent>
 Document::Document(QWidget *parent, const QSize& pageDimension, const QColor& pageBgColor, const PageGrid& pageGrid,const qreal& pageZoom) :
-    QWidget(parent),
+    QScrollArea(parent),
     m_pageDimension(pageDimension),
     m_pageBgColor(pageBgColor),
     m_pageGrid(pageGrid),
     m_pageZoom(pageZoom)
 {
-    initScrollArea();
+    //Init QScrollArea
+
+    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+    setWidgetResizable( true );
+
+    //Init layout
+    m_layoutWrapper = new QWidget(this);
+
+    m_layout = new QVBoxLayout(m_layoutWrapper);
+    m_layout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+
+    m_layoutWrapper->setLayout(m_layout);
+
+    //Insert layout in scrollArea
+    setWidget(m_layoutWrapper);
 }
 
 void Document::addNewPage()
@@ -20,30 +34,12 @@ void Document::addNewPage()
 
 }
 
-void Document::resizeEvent(QResizeEvent * event)
-{
+//void Document::resizeEvent(QResizeEvent * event)
+//{
 
-    m_scrollArea->setGeometry(0,0,event->size().width(), event->size().height());
-    return QWidget::resizeEvent(event);
-}
-void Document::initScrollArea()
-{
-    //Init QScrollArea
-    m_scrollArea = new QScrollArea( this );
-    m_scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-    m_scrollArea->setWidgetResizable( true );
+//    return QScrollArea::resizeEvent(event);
+//}
 
-    //Init layout
-    m_layoutWrapper = new QWidget(m_scrollArea);
-
-    m_layout = new QVBoxLayout(m_layoutWrapper);
-    m_layout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-
-    m_layoutWrapper->setLayout(m_layout);
-
-    //Insert layout in scrollArea
-    m_scrollArea->setWidget(m_layoutWrapper);
-}
 
 void Document::keyPressEvent(QKeyEvent *event)
 {
