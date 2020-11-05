@@ -10,7 +10,7 @@ public:
     HandStroke(const QColor& penColor, const qreal& penWidth = 1);
     virtual ~HandStroke() {};
     virtual void draw(QPainter& painter, qreal zoom) override;
-    virtual void appendPoint(const QPoint& point);
+    virtual void appendPoint(const QPointF& point);
     virtual bool intersects(const QPointF& point) override {};
 private:
     QVector<QPointF> m_points;

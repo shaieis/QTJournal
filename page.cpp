@@ -1,5 +1,9 @@
 #include "page.h"
+
 #include <QDebug>
+#include <QMouseEvent>
+
+#include "handstroke.h"
 
 Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200)), m_zoom(1)
 {
@@ -40,9 +44,15 @@ void Page::paintEvent(QPaintEvent * e)
     p.setRenderHint(QPainter::Antialiasing);
     m_grid.draw(p, m_dimension, m_zoom);
 
+    for (auto stroke : strokes)
+    {
+        stroke->draw(p, m_zoom);
+    }
 
     qDebug() << "Paint Event " << e;
     return QWidget::paintEvent(e);
+
+
 }
 
 void Page::setZoom(const qreal& newZoom)
@@ -57,4 +67,53 @@ void Page::setZoom(const qreal& newZoom)
  void Page::setDimension(const QSize& newDimension)
  {
      m_dimension = newDimension;
+ }
+
+ void Page::mousePressEvent(QMouseEvent *event)
+ {
+     if (!(event->buttons() & Qt::LeftButton))
+     {
+         return;
+     }
+
+     qDebug() << "press" << event->pos();
+     const QPointF &modelPos = widgetPosToModelPos(event->pos());
+     HandStroke *newStroke = new HandStroke();
+     newStroke->appendPoint(modelPos);
+     strokes << newStroke;
+     update();
+ }
+ void Page::mouseReleaseEvent(QMouseEvent *event)
+ {
+     if (!(event->buttons() & Qt::LeftButton))
+     {
+         return;
+     }
+
+     qDebug() << "release" << event->pos();
+     update();
+
+ }
+ void Page::mouseMoveEvent(QMouseEvent *event)
+ {
+     if (!(event->buttons() & Qt::LeftButton))
+     {
+         return;
+     }
+
+     const QPointF &modelPos = widgetPosToModelPos(event->pos());
+     static_cast<HandStroke*>(strokes.last())->appendPoint(modelPos);
+     qDebug() << "move" << event->pos();
+     update();
+ }
+
+
+ //  =================== Private methods ===================
+
+ QPointF Page::widgetPosToModelPos(const QPoint& widgetPos) const
+ {
+     QPointF retVal(widgetPos);
+     retVal /= m_zoom;
+
+     return retVal;
  }

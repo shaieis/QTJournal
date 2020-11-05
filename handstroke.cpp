@@ -13,7 +13,7 @@ void HandStroke::draw(QPainter& painter, qreal zoom)
     if (m_points.size() == 0) return;
 
     QPen pen(penColor());
-    pen.setWidthF(penWidth());
+    pen.setWidthF(penWidth() * zoom);
     pen.setCapStyle(Qt::RoundCap);
     painter.setPen(pen);
 
@@ -34,7 +34,7 @@ void HandStroke::draw(QPainter& painter, qreal zoom)
     }
 }
 
-void HandStroke::appendPoint(const QPoint& point)
+void HandStroke::appendPoint(const QPointF& point)
 {
     m_points.append(point);
 }
