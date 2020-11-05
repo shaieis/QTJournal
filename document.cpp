@@ -62,14 +62,7 @@ void Document::zoomToWidth(int width, bool resizeToFitScrollBar)
 void Document::keyPressEvent(QKeyEvent *event)
 {
     qDebug() << "key pressed" << event->key();
-    if (event->key() == Qt::Key::Key_X)
-    {
-        setPageZoom(m_pageZoom *2);
-    }
-    if (event->key() == Qt::Key::Key_Y)
-    {
-        setPageZoom(m_pageZoom /2);
-    }
+
 }
 
 void Document::setPageZoom(const qreal& newZoom)
@@ -79,5 +72,30 @@ void Document::setPageZoom(const qreal& newZoom)
     {
         page->setZoom(m_pageZoom);
     }
+
+}
+
+void Document::wheelEvent(QWheelEvent *event)
+{
+    if (event->modifiers() != Qt::ControlModifier)
+    {
+       QScrollArea::wheelEvent(event);
+       return;
+    }
+    qDebug() <<event->angleDelta().y();
+    if (event->angleDelta().y() > 0)
+    {
+
+        m_pageFitsWidth = false;
+        setPageZoom(m_pageZoom * event->angleDelta().y() *scrollWheelZoomFactor);
+
+    }
+    else if (event->angleDelta().y() < 0)
+    {
+        m_pageFitsWidth = false;
+        setPageZoom(m_pageZoom / ((-(event->angleDelta().y())) * scrollWheelZoomFactor));
+    }
+    event->accept();
+
 
 }
