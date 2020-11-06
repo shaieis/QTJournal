@@ -15,8 +15,8 @@ public:
     // Draws Stroke to painter
     virtual void draw(QPainter& painter, qreal zoom) = 0;
 
-    // Checks if point intersects Stroke
-    virtual bool intersects(const QPointF& point) = 0;
+    // Checks if Polygon intersects Stroke
+    virtual bool intersects(const QPolygonF& poly) const = 0;
 
     virtual QColor penColor() const;
     virtual void setPenColor(const QColor &penColor);

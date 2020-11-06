@@ -38,3 +38,17 @@ void HandStroke::appendPoint(const QPointF& point)
 {
     m_points.append(point);
 }
+
+bool HandStroke::intersects(const QPolygonF& poly) const
+{
+//    if (m_points.size() == 0) return false;
+//    if (m_points.size() == 1) return rect.contains(m_points.at(0));
+
+//    //m_points.size() > 1
+//    for (const QPointF& point : m_points)
+//    {
+//        if
+//                //https://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
+//    }
+    return true;
+}

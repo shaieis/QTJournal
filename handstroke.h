@@ -1,6 +1,7 @@
 #ifndef HANDSTROKE_H
 #define HANDSTROKE_H
 
+#include <QPolygonF>
 #include "stroke.h"
 
 class HandStroke : public Stroke
@@ -11,9 +12,9 @@ public:
     virtual ~HandStroke() {};
     virtual void draw(QPainter& painter, qreal zoom) override;
     virtual void appendPoint(const QPointF& point);
-    virtual bool intersects(const QPointF& point) override {};
+    virtual bool intersects(const QPolygonF& poly) const override;
 private:
-    QVector<QPointF> m_points;
+    QPolygonF m_points;
 
 };
 
