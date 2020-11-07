@@ -24,14 +24,17 @@ public:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void eraseLast(const QPolygonF& polygon);
 private:
 
+    QVector<QPair<Stroke*, int >> intersect(const QPolygonF& polygon) const; // returns a vector of all strokes that intersect the polygon and their index
+    int intersectsLastIndex(const QPolygonF& polygon) const;
     QPointF widgetPosToModelPos(const QPoint& widgetPos) const;
     QSize m_dimension;
     QColor m_bg;
     PageGrid m_grid;
     qreal m_zoom;
-    QVector<Stroke*> strokes;
+    QVector<Stroke*> m_strokes;
 
 };
 

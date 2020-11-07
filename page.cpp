@@ -44,7 +44,7 @@ void Page::paintEvent(QPaintEvent * e)
     p.setRenderHint(QPainter::Antialiasing);
     m_grid.draw(p, m_dimension, m_zoom);
 
-    for (auto stroke : strokes)
+    for (auto stroke : m_strokes)
     {
         stroke->draw(p, m_zoom);
     }
@@ -80,7 +80,7 @@ void Page::setZoom(const qreal& newZoom)
      const QPointF &modelPos = widgetPosToModelPos(event->pos());
      HandStroke *newStroke = new HandStroke();
      newStroke->appendPoint(modelPos);
-     strokes << newStroke;
+     m_strokes << newStroke;
      update();
  }
  void Page::mouseReleaseEvent(QMouseEvent *event)
@@ -96,19 +96,56 @@ void Page::setZoom(const qreal& newZoom)
  }
  void Page::mouseMoveEvent(QMouseEvent *event)
  {
-     if (!(event->buttons() & Qt::LeftButton))
-     {
-         return;
-     }
+    if (event->buttons() & Qt::LeftButton)
+    {
+         const QPointF &modelPos = widgetPosToModelPos(event->pos());
+         static_cast<HandStroke*>(m_strokes.last())->appendPoint(modelPos);
+         qDebug() << "move" << event->pos();
+         update();
+    }
+    else if (event->buttons() & Qt::RightButton)
+    {
+        QPointF center = widgetPosToModelPos(event->pos());
 
-     const QPointF &modelPos = widgetPosToModelPos(event->pos());
-     static_cast<HandStroke*>(strokes.last())->appendPoint(modelPos);
-     qDebug() << "move" << event->pos();
-     update();
+        QPointF offset = {5,5};
+
+        QRectF rect(center-offset, center+offset);
+        qDebug() << "move erase. center: " << center << " rect: " << rect;
+        eraseLast(rect);
+    }
  }
 
+ void Page::eraseLast(const QPolygonF& polygon)
+ {
+
+     for (int i = m_strokes.size()-1; i >= 0; --i)
+     {
+         qDebug() << "Checking stroke " << i << " of " << m_strokes.size();
+         if (m_strokes[i]->intersects(polygon))
+         {
+             qDebug() << "Found intersection";
+             m_strokes.remove(i);
+             update();
+             return;
+         }
+     }
+ }
 
  //  =================== Private methods ===================
+ QVector<QPair<Stroke*, int>> Page::intersect(const QPolygonF& polygon) const
+ {
+     QVector<QPair<Stroke*, int>> ret;
+     for (int i = 0; i < m_strokes.size(); ++i)
+     {
+         Stroke* curr = m_strokes[i];
+         if (curr->intersects(polygon))
+         {
+             ret << QPair<Stroke*, int>(curr, i);
+         }
+
+     }
+     return ret;
+ }
 
  QPointF Page::widgetPosToModelPos(const QPoint& widgetPos) const
  {
