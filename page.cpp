@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 
+
 #include "handstroke.h"
 
 Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200)), m_zoom(1)
@@ -38,7 +39,7 @@ void Page::setBackground(const QColor& color)
     setPalette(pal);
 }
 
-void Page::paintEvent(QPaintEvent * e)
+void Page::paintEvent(QPaintEvent * event)
 {
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing);
@@ -49,8 +50,8 @@ void Page::paintEvent(QPaintEvent * e)
         stroke->draw(p, m_zoom);
     }
 
-    qDebug() << "Paint Event " << e;
-    return QWidget::paintEvent(e);
+    qDebug() << "Paint Event " << event;
+    return QWidget::paintEvent(event);
 
 
 }
@@ -71,27 +72,40 @@ void Page::setZoom(const qreal& newZoom)
 
  void Page::mousePressEvent(QMouseEvent *event)
  {
-     if (!(event->buttons() & Qt::LeftButton))
+     if (event->buttons() & Qt::LeftButton)
      {
+         qDebug() << "press" << event->pos();
+         const QPointF &modelPos = widgetPosToModelPos(event->pos());
+         HandStroke *newStroke = new HandStroke();
+         newStroke->appendPoint(modelPos);
+         m_strokes << newStroke;
+         update();
          return;
      }
 
-     qDebug() << "press" << event->pos();
-     const QPointF &modelPos = widgetPosToModelPos(event->pos());
-     HandStroke *newStroke = new HandStroke();
-     newStroke->appendPoint(modelPos);
-     m_strokes << newStroke;
-     update();
+     else if (event->buttons() & Qt::RightButton)
+     {
+         QPixmap pixmap(10,10);
+         pixmap.fill();
+         QPainter painter(&pixmap);
+
+         painter.drawRect(0,0,9,9);
+         setCursor(pixmap);
+         return;
+     }
+
  }
  void Page::mouseReleaseEvent(QMouseEvent *event)
  {
-     if (!(event->buttons() & Qt::LeftButton))
+
+     if (event->button() == Qt::RightButton)
      {
+         qDebug() <<"unset rect cursor";
+         unsetCursor();
          return;
      }
-
      qDebug() << "release" << event->pos();
-     update();
+
 
  }
  void Page::mouseMoveEvent(QMouseEvent *event)
@@ -110,6 +124,7 @@ void Page::setZoom(const qreal& newZoom)
         QPointF offset = {5,5};
 
         QRectF rect(center-offset, center+offset);
+
         qDebug() << "move erase. center: " << center << " rect: " << rect;
         eraseLast(rect);
     }
@@ -120,7 +135,10 @@ void Page::setZoom(const qreal& newZoom)
 
      for (int i = m_strokes.size()-1; i >= 0; --i)
      {
+
          qDebug() << "Checking stroke " << i << " of " << m_strokes.size();
+
+
          if (m_strokes[i]->intersects(polygon))
          {
              qDebug() << "Found intersection";

@@ -22,6 +22,7 @@ private:
     QScrollArea* m_scrollArea;
     Document* m_document;
 
+
 };
 
 
