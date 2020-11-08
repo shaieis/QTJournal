@@ -1,6 +1,14 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/edit.svg</file>
         <file>images/save.svg</file>
+        <file>images/add-page.svg</file>
+        <file>images/export-pdf.svg</file>
+        <file>images/highlighter.svg</file>
+        <file>images/pen.svg</file>
+        <file>images/eraser.svg</file>
+        <file>images/pen-color-black.svg</file>
+        <file>images/pen-color-blue.svg</file>
+        <file>images/pen-color-green.svg</file>
+        <file>images/pen-color-red.svg</file>
     </qresource>
 </RCC>
