@@ -47,15 +47,12 @@ bool HandStroke::intersects(const QPolygonF& poly) const
     //else
     for (int i=0; i<m_points.size()-1; ++i )
     {
+        // create a tmp polygon of the line between m_points i and i+1 and check for intesection with poly
         if (poly.intersects(QPolygonF(QVector<QPointF>({m_points[i], m_points[i+1]})))) return true;
     }
+
     return false;
 }
 
-
-QPolygonF& HandStroke::getPolygon()
-{
-    return m_points;
-}
 
 
