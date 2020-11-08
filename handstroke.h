@@ -13,6 +13,8 @@ public:
     virtual void draw(QPainter& painter, qreal zoom) override;
     virtual void appendPoint(const QPointF& point);
     virtual bool intersects(const QPolygonF& poly) const override;
+    QPolygonF& getPolygon();
+
 private:
     QPolygonF m_points;
 

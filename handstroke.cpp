@@ -41,10 +41,21 @@ void HandStroke::appendPoint(const QPointF& point)
 
 bool HandStroke::intersects(const QPolygonF& poly) const
 {
-    return m_points.intersects(poly);
+    if (m_points.size() == 0) return false;
+    else if (m_points.size() == 1) return poly.containsPoint(m_points[0], Qt::FillRule::WindingFill);
+
+    //else
+    for (int i=0; i<m_points.size()-1; ++i )
+    {
+        if (poly.intersects(QPolygonF(QVector<QPointF>({m_points[i], m_points[i+1]})))) return true;
+    }
+    return false;
 }
 
 
-
+QPolygonF& HandStroke::getPolygon()
+{
+    return m_points;
+}
 
 
