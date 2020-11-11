@@ -10,5 +10,14 @@
         <file>images/pen-color-blue.svg</file>
         <file>images/pen-color-green.svg</file>
         <file>images/pen-color-red.svg</file>
+        <file>images/pen-medium.svg</file>
+        <file>images/pen-thick.svg</file>
+        <file>images/pen-thin.svg</file>
+        <file>images/eraser-large.svg</file>
+        <file>images/eraser-medium.svg</file>
+        <file>images/eraser-small.svg</file>
+        <file>images/zoom-in.svg</file>
+        <file>images/zoom-out.svg</file>
+        <file>images/zoom-to-width.svg</file>
     </qresource>
 </RCC>
