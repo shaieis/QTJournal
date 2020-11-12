@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QResizeEvent>
 #include <QScrollBar>
+
 Document::Document(QWidget *parent, const QSize& pageDimension, const QColor& pageBgColor, const PageGrid& pageGrid,const qreal& pageZoom, bool pageFitsWidth) :
     QScrollArea(parent),
     m_pageDimension(pageDimension),
@@ -39,25 +40,26 @@ void Document::addNewPage()
 
 void Document::resizeEvent(QResizeEvent * event)
 {
-    if (m_pageFitsWidth) zoomToWidth(event->size().width());
+    if (m_pageFitsWidth) setZoomToFitWidth(event->size().width());
 
     return QScrollArea::resizeEvent(event);
 }
 
-void Document::zoomToWidth(int width, bool resizeToFitScrollBar)
+
+
+void Document::zoomIn()
 {
-    // if width == 0, set to fit width of widget
-
-    if (width == 0) width = this->width();
-    if (resizeToFitScrollBar) width -= verticalScrollBar()->width() + 1;
-
-
-    int pageWidth = m_pageDimension.width();
-    qDebug() <<  this->width() << " " << verticalScrollBar()->width();
-
-     qreal zoom = (qreal)width / pageWidth;
-     setPageZoom(zoom);
+     m_pageFitsWidth = false;
+     setZoom(m_pageZoom * zoomFactor);
 }
+
+void Document::zoomOut()
+{
+     m_pageFitsWidth = false;
+     setZoom(m_pageZoom / zoomFactor);
+}
+
+
 
 void Document::keyPressEvent(QKeyEvent *event)
 {
@@ -65,37 +67,73 @@ void Document::keyPressEvent(QKeyEvent *event)
 
 }
 
-void Document::setPageZoom(const qreal& newZoom)
+void Document::setZoom(const qreal& newZoom)
 {
     m_pageZoom = newZoom;
     for (auto page : m_pages)
     {
         page->setZoom(m_pageZoom);
     }
-
+    update();
 }
 
 void Document::wheelEvent(QWheelEvent *event)
 {
+
     if (event->modifiers() != Qt::ControlModifier)
     {
        QScrollArea::wheelEvent(event);
        return;
     }
+
     qDebug() <<event->angleDelta().y();
+
     if (event->angleDelta().y() > 0)
     {
-
         m_pageFitsWidth = false;
-        setPageZoom(m_pageZoom * event->angleDelta().y() *scrollWheelZoomFactor);
+        setZoom(m_pageZoom * event->angleDelta().y() *scrollWheelZoomFactor);
 
     }
     else if (event->angleDelta().y() < 0)
     {
         m_pageFitsWidth = false;
-        setPageZoom(m_pageZoom / ((-(event->angleDelta().y())) * scrollWheelZoomFactor));
+        setZoom(m_pageZoom / ((-(event->angleDelta().y())) * scrollWheelZoomFactor));
     }
-    event->accept();
+}
+
+void Document::toggleZoomToFitWidth(bool enable)
+{
+    if (enable)
+    {
+        if (m_pageFitsWidth) return;
+
+        m_pageFitsWidth = true;
+        setZoomToFitWidth();
+    }
+    else
+    {
+        m_pageFitsWidth = false;
+    }
+}
 
 
+// =========== Private methods ===========
+
+void Document::setZoomToFitWidth(int width) // If width == 0, width of layout is used
+{
+    qDebug() << width;
+    if (width == 0)
+    {
+        width = this->width() - verticalScrollBar()->width() - 2;
+    }
+
+    qDebug() << width <<'\n';
+    const QMargins& layoutMargins = m_layout->contentsMargins();
+
+    width -= layoutMargins.left() + layoutMargins.right(); // take into account margins of layout
+
+    int pageWidth = m_pageDimension.width();
+
+    qreal zoom = (qreal)width / pageWidth;
+    setZoom(zoom);
 }

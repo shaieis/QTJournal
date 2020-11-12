@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QAction>
 #include <QToolBar>
+#include <QWheelEvent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     initEraserToolBar();
     initZoomToolBar();
 
-    setIconSize({35,35});
+    setToolBarsIconSize({35,35});
     setToolBarsSpacing(20);
     QColor bg("white");
 
@@ -26,14 +27,14 @@ MainWindow::MainWindow(QWidget *parent)
     QSize dim(2100,2700);
 
 
-    Document* d = new Document(this,dim,bg,grid,1, true);
+    m_document = new Document(this,dim,bg,grid,1, true);
 
 
-    setCentralWidget(d);
+    setCentralWidget(m_document);
 
-    d->addNewPage();
-    d->addNewPage();
-    d->addNewPage();
+    m_document->addNewPage();
+    m_document->addNewPage();
+    m_document->addNewPage();
 
 
 }
@@ -45,6 +46,13 @@ MainWindow::~MainWindow()
 void MainWindow::paintEvent(QPaintEvent *)
 {}
 
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    if (event->modifiers() == Qt::ControlModifier)
+    {
+        toggleZoomToFitWidth(false);
+    }
+}
 
 // ======== Private methods ========
 
@@ -192,19 +200,21 @@ void MainWindow::initZoomToolBar()
 {
     m_zoomToolBar = addToolBar("Zoom");
 
-    m_zoomToWidthAct =new QAction(QIcon(":/images/zoom-to-width.svg"), "Zoom to width", this);
-    m_zoomToWidthAct->setToolTip("Zoom to fill Width");
-    m_zoomToWidthAct->setCheckable(true);
-    m_zoomToWidthAct->setChecked(true);
+    m_zoomToFitWidthAct =new QAction(QIcon(":/images/zoom-to-width.svg"), "Zoom to width", this);
+    m_zoomToFitWidthAct->setToolTip("Zoom to fill Width");
+    m_zoomToFitWidthAct->setCheckable(true);
+    m_zoomToFitWidthAct->setChecked(true);
+    connect(m_zoomToFitWidthAct, &QAction::triggered,this, &MainWindow::toggleZoomToFitWidth);
 
     m_zoomOutAct =new QAction(QIcon(":/images/zoom-out.svg"), "Zoom out", this);
     m_zoomOutAct->setToolTip("Zoom out");
+    connect(m_zoomOutAct, &QAction::triggered,this, &MainWindow::zoomOut);
 
     m_zoomInAct =new QAction(QIcon(":/images/zoom-in.svg"), "Zoom in", this);
     m_zoomInAct->setToolTip("Zoom in");
+    connect(m_zoomInAct, &QAction::triggered,this, &MainWindow::zoomIn);
 
-
-    m_zoomToolBar->addAction(m_zoomToWidthAct);
+    m_zoomToolBar->addAction(m_zoomToFitWidthAct);
     m_zoomToolBar->addAction(m_zoomOutAct);
     m_zoomToolBar->addAction(m_zoomInAct);
 }
@@ -225,4 +235,23 @@ void MainWindow::setToolBarsSpacing(int spacePx)
     m_penToolBar->setStyleSheet("QToolBar{spacing:" + QString::number(spacePx) + ";}");
     m_eraserToolBar->setStyleSheet("QToolBar{spacing:" + QString::number(spacePx) + ";}");
     m_zoomToolBar->setStyleSheet("QToolBar{spacing:" + QString::number(spacePx) + ";}");
+}
+
+
+void MainWindow::zoomIn()
+{
+    m_zoomToFitWidthAct->setChecked(false);
+    m_document->zoomIn();
+}
+
+void MainWindow::zoomOut()
+{
+    m_zoomToFitWidthAct->setChecked(false);
+    m_document->zoomOut();
+}
+void MainWindow::toggleZoomToFitWidth(bool enable)
+{
+    qDebug() << enable;
+    m_zoomToFitWidthAct->setChecked(enable);
+    m_document->toggleZoomToFitWidth(enable);
 }

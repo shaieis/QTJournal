@@ -18,6 +18,8 @@ public:
     ~MainWindow();
     void paintEvent(QPaintEvent *) override;
 
+    void wheelEvent(QWheelEvent *event) override;
+
 private:
     QScrollArea* m_scrollArea;
     Document* m_document;
@@ -31,6 +33,11 @@ private:
     void setToolBarsIconSize(const QSize& iconSize);
     void setToolBarsSpacing(int spacePx);
 
+    void zoomIn();
+    void zoomOut();
+    void toggleZoomToFitWidth(bool enable);
+
+
     QAction *m_exportToPdfAct;
     QAction *m_addPageAct;
 
@@ -39,7 +46,7 @@ private:
 
     QAction *m_zoomInAct;
     QAction *m_zoomOutAct;
-    QAction *m_zoomToWidthAct;
+    QAction *m_zoomToFitWidthAct;
 
     QList<QAction*> m_penColorActs;
     QList<QAction*> m_penThicknessActs;

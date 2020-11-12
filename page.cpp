@@ -50,18 +50,15 @@ void Page::paintEvent(QPaintEvent * event)
         stroke->draw(p, m_zoom);
     }
 
-    qDebug() << "Paint Event " << event;
     return QWidget::paintEvent(event);
-
-
 }
 
 void Page::setZoom(const qreal& newZoom)
 {
 
     m_zoom = newZoom;
-    //setMinimumSize(m_dimension*m_zoom);
-    qDebug() << "page dims: " << m_dimension*m_zoom;
+    qDebug() << "page setting new dimension" << m_dimension*m_zoom;
+
     setFixedSize(m_dimension*m_zoom);
 }
 
@@ -74,7 +71,7 @@ void Page::setZoom(const qreal& newZoom)
  {
      if (event->buttons() & Qt::LeftButton)
      {
-         qDebug() << "press" << event->pos();
+
          const QPointF &modelPos = widgetPosToModelPos(event->pos());
          HandStroke *newStroke = new HandStroke();
          newStroke->appendPoint(modelPos);
