@@ -7,7 +7,7 @@
 #include <QAction>
 #include <QToolBar>
 #include <QWheelEvent>
-
+#include <type_traits>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -43,8 +43,7 @@ MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::paintEvent(QPaintEvent *)
-{}
+
 
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
@@ -52,6 +51,32 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     {
         toggleZoomToFitWidth(false);
     }
+}
+
+
+
+void MainWindow::zoomIn()
+{
+    m_zoomToFitWidthAct->setChecked(false);
+    m_document->zoomIn();
+}
+
+void MainWindow::zoomOut()
+{
+    m_zoomToFitWidthAct->setChecked(false);
+    m_document->zoomOut();
+}
+void MainWindow::toggleZoomToFitWidth(bool enable)
+{
+    qDebug() << enable;
+    m_zoomToFitWidthAct->setChecked(enable);
+    m_document->toggleZoomToFitWidth(enable);
+}
+
+void MainWindow::setTool(Tool tool)
+{
+    qDebug() << "setTool: " << static_cast<std::underlying_type<Tool>::type>(tool);
+    m_currTool = tool;
 }
 
 // ======== Private methods ========
@@ -78,11 +103,14 @@ void MainWindow::initToolsToolBar()
     m_penSelectAct =new QAction(QIcon(":/images/pen.svg"), "Choose pen", this);
     m_penSelectAct->setToolTip("Use pen to draw on page");
     m_penSelectAct->setCheckable(true);
+    connect(m_penSelectAct, &QAction::triggered,this, [this](){setTool(Tool::PEN);});
+
 
     // Eraser selection
     m_eraserSelectAct =new QAction(QIcon(":/images/eraser.svg"), "Choose erase", this);
     m_eraserSelectAct->setToolTip("Use eraser to delete from page");
     m_eraserSelectAct->setCheckable(true);
+    connect(m_eraserSelectAct, &QAction::triggered,this, [this](){setTool(Tool::ERASER);});
 
     m_toolsToolBar = addToolBar("Tools");
     m_toolActionGroup = new QActionGroup(m_toolsToolBar);
@@ -238,20 +266,3 @@ void MainWindow::setToolBarsSpacing(int spacePx)
 }
 
 
-void MainWindow::zoomIn()
-{
-    m_zoomToFitWidthAct->setChecked(false);
-    m_document->zoomIn();
-}
-
-void MainWindow::zoomOut()
-{
-    m_zoomToFitWidthAct->setChecked(false);
-    m_document->zoomOut();
-}
-void MainWindow::toggleZoomToFitWidth(bool enable)
-{
-    qDebug() << enable;
-    m_zoomToFitWidthAct->setChecked(enable);
-    m_document->toggleZoomToFitWidth(enable);
-}

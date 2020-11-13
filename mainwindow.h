@@ -14,15 +14,28 @@ class MainWindow : public QMainWindow
 
 
 public:
+    enum class Tool
+    {
+        NONE = 0,
+        PEN,
+        ERASER,
+    };
+
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
-    void paintEvent(QPaintEvent *) override;
 
-    void wheelEvent(QWheelEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override; // used to toggle m_zoomToFitWidthAct
 
+    void zoomIn();
+    void zoomOut();
+    void toggleZoomToFitWidth(bool enable);
+
+    void setTool(Tool tool);
 private:
     QScrollArea* m_scrollArea;
     Document* m_document;
+
+    Tool m_currTool;
 
     void initFileToolBar();
     void initToolsToolBar();
@@ -33,9 +46,8 @@ private:
     void setToolBarsIconSize(const QSize& iconSize);
     void setToolBarsSpacing(int spacePx);
 
-    void zoomIn();
-    void zoomOut();
-    void toggleZoomToFitWidth(bool enable);
+
+
 
 
     QAction *m_exportToPdfAct;
@@ -63,6 +75,9 @@ private:
     QToolBar *m_penToolBar;
     QToolBar *m_eraserToolBar;
     QToolBar *m_zoomToolBar;
+
+
+
 
 };
 
