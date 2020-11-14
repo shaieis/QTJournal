@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QResizeEvent>
 #include <QScrollBar>
-
+#include <QScroller>
 Document::Document(QWidget *parent, const QSize& pageDimension, const QColor& pageBgColor, const PageGrid& pageGrid,const qreal& pageZoom, bool pageFitsWidth) :
     QScrollArea(parent),
     m_pageDimension(pageDimension),
@@ -26,6 +26,8 @@ Document::Document(QWidget *parent, const QSize& pageDimension, const QColor& pa
 
     //Insert layout in scrollArea
     setWidget(m_layoutWrapper);
+
+    QScroller::grabGesture(this->viewport(), QScroller::TouchGesture);
 
 }
 

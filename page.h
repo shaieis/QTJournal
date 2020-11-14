@@ -24,9 +24,9 @@ public:
     void setZoom(const qreal& newZoom);
     void setDimension(const QSize& newDimension);
 
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
+    //void mousePressEvent(QMouseEvent *event) override;
+    //void mouseReleaseEvent(QMouseEvent *event) override;
+   // void mouseMoveEvent(QMouseEvent *event) override;
 
     void eraseLast(const QPolygonF& polygon);
 

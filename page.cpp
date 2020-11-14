@@ -79,65 +79,65 @@ void Page::setZoom(const qreal& newZoom)
 
 
 
- void Page::mousePressEvent(QMouseEvent *event)
- {
-     if (event->buttons() & Qt::LeftButton)
-     {
+// void Page::mousePressEvent(QMouseEvent *event)
+// {
+//     if (event->buttons() & Qt::LeftButton)
+//     {
 
-         const QPointF &modelPos = widgetPosToModelPos(event->pos());
-         HandStroke *newStroke = new HandStroke();
-         newStroke->appendPoint(modelPos);
-         m_strokes << newStroke;
-         update();
-         return;
-     }
+//         const QPointF &modelPos = widgetPosToModelPos(event->pos());
+//         HandStroke *newStroke = new HandStroke();
+//         newStroke->appendPoint(modelPos);
+//         m_strokes << newStroke;
+//         update();
+//         return;
+//     }
 
-     else if (event->buttons() & Qt::RightButton)
-     {
-         QPixmap pixmap(10,10);
-         pixmap.fill();
-         QPainter painter(&pixmap);
+//     else if (event->buttons() & Qt::RightButton)
+//     {
+//         QPixmap pixmap(10,10);
+//         pixmap.fill();
+//         QPainter painter(&pixmap);
 
-         painter.drawRect(0,0,9,9);
-         setCursor(pixmap);
-         return;
-     }
+//         painter.drawRect(0,0,9,9);
+//         setCursor(pixmap);
+//         return;
+//     }
 
- }
- void Page::mouseReleaseEvent(QMouseEvent *event)
- {
+// }
+// void Page::mouseReleaseEvent(QMouseEvent *event)
+// {
 
-     if (event->button() == Qt::RightButton)
-     {
-         qDebug() <<"unset rect cursor";
-         unsetCursor();
-         return;
-     }
-     qDebug() << "release" << event->pos();
+//     if (event->button() == Qt::RightButton)
+//     {
+//         qDebug() <<"unset rect cursor";
+//         unsetCursor();
+//         return;
+//     }
+//     qDebug() << "release" << event->pos();
 
 
- }
- void Page::mouseMoveEvent(QMouseEvent *event)
- {
-    if (event->buttons() & Qt::LeftButton)
-    {
-         const QPointF &modelPos = widgetPosToModelPos(event->pos());
-         static_cast<HandStroke*>(m_strokes.last())->appendPoint(modelPos);
-         qDebug() << "move" << event->pos();
-         update();
-    }
-    else if (event->buttons() & Qt::RightButton)
-    {
-        QPointF center = widgetPosToModelPos(event->pos());
+// }
+// void Page::mouseMoveEvent(QMouseEvent *event)
+// {
+//    if (event->buttons() & Qt::LeftButton)
+//    {
+//         const QPointF &modelPos = widgetPosToModelPos(event->pos());
+//         static_cast<HandStroke*>(m_strokes.last())->appendPoint(modelPos);
+//         qDebug() << "move" << event->pos();
+//         update();
+//    }
+//    else if (event->buttons() & Qt::RightButton)
+//    {
+//        QPointF center = widgetPosToModelPos(event->pos());
 
-        QPointF offset = {5,5};
+//        QPointF offset = {5,5};
 
-        QRectF rect(center-offset, center+offset);
+//        QRectF rect(center-offset, center+offset);
 
-        qDebug() << "move erase. center: " << center << " rect: " << rect;
-        eraseLast(rect);
-    }
- }
+//        qDebug() << "move erase. center: " << center << " rect: " << rect;
+//        eraseLast(rect);
+//    }
+// }
 
  void Page::eraseLast(const QPolygonF& polygon)
  {
