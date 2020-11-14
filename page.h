@@ -7,6 +7,9 @@
 
 #include "pagegrid.h"
 #include "stroke.h"
+
+#include "tool.h"
+
 class Page : public QWidget
 {
     Q_OBJECT
@@ -26,6 +29,8 @@ public:
     void mouseMoveEvent(QMouseEvent *event) override;
 
     void eraseLast(const QPolygonF& polygon);
+
+    void setTool(const Tool *tool);
 private:
 
     QVector<QPair<Stroke*, int>> intersect(const QPolygonF& polygon) const; // returns a vector of all strokes that intersect the polygon and their index
@@ -38,6 +43,7 @@ private:
     qreal m_zoom;
     QVector<Stroke*> m_strokes;
 
+    const Tool *m_currTool;
 };
 
 #endif // PAGE_H

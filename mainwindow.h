@@ -5,7 +5,7 @@
 #include <QScrollArea>
 #include <QActionGroup>
 #include "document.h"
-
+#include "tool.h"
 
 
 class MainWindow : public QMainWindow
@@ -14,12 +14,9 @@ class MainWindow : public QMainWindow
 
 
 public:
-    enum class Tool
-    {
-        NONE = 0,
-        PEN,
-        ERASER,
-    };
+    static constexpr qreal penThicknesses[] = {1,2,3};
+    static constexpr QSizeF erasers[] = { {10,10}, {15,15}, {20,20} };
+
 
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
@@ -30,13 +27,19 @@ public:
     void zoomOut();
     void toggleZoomToFitWidth(bool enable);
 
-    void setTool(Tool tool);
+
+
+
 private:
     QScrollArea* m_scrollArea;
     Document* m_document;
 
-    Tool m_currTool;
 
+
+    Pen *m_pen;
+    Eraser *m_eraser;
+
+    void initTools();
     void initFileToolBar();
     void initToolsToolBar();
     void initPenToolBar();

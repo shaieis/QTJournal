@@ -6,7 +6,7 @@
 
 #include "handstroke.h"
 
-Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200)), m_zoom(1)
+Page::Page(QWidget *parent) : QWidget(parent), m_dimension(QSize(200,200)), m_zoom(1), m_currTool(nullptr)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -20,12 +20,12 @@ Page::Page(QWidget *parent, const QSize& dimension, const QColor& bg, PageGrid& 
     m_dimension(dimension),
     m_bg(bg),
     m_grid(grid),
-    m_zoom(zoom)
+    m_zoom(zoom),
+    m_currTool(nullptr)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     setFixedSize(m_dimension*m_zoom);
-    qDebug() << "page size:" << m_dimension*m_zoom;
     setBackground(bg);
 }
 
@@ -60,12 +60,24 @@ void Page::setZoom(const qreal& newZoom)
     qDebug() << "page setting new dimension" << m_dimension*m_zoom;
 
     setFixedSize(m_dimension*m_zoom);
+    if (m_currTool)
+    {
+        setCursor(m_currTool->cursor(m_zoom));
+    }
 }
 
  void Page::setDimension(const QSize& newDimension)
  {
      m_dimension = newDimension;
  }
+
+ void Page::setTool(const Tool *tool)
+ {
+     m_currTool = tool;
+     setCursor(tool->cursor(m_zoom));
+ }
+
+
 
  void Page::mousePressEvent(QMouseEvent *event)
  {

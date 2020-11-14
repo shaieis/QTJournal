@@ -15,15 +15,18 @@ SOURCES += \
     mainwindow.cpp \
     page.cpp \
     pagegrid.cpp \
-    stroke.cpp
+    stroke.cpp \
+    tool.cpp
 
 HEADERS += \
+    constants.h \
     document.h \
     handstroke.h \
     mainwindow.h \
     page.h \
     pagegrid.h \
-    stroke.h
+    stroke.h \
+    tool.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

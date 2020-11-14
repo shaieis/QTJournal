@@ -77,6 +77,14 @@ void Document::setZoom(const qreal& newZoom)
     update();
 }
 
+void Document::setTool(const Tool *tool)
+{
+    for (auto page : m_pages)
+    {
+        page->setTool(tool);
+    }
+
+}
 void Document::wheelEvent(QWheelEvent *event)
 {
 

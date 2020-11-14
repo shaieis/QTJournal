@@ -27,6 +27,7 @@ public:
     void toggleZoomToFitWidth(bool enable);
     void setZoom(const qreal& newZoom);
 
+    void setTool(const Tool *tool);
 
 private:
     QVector<Page*> m_pages;
